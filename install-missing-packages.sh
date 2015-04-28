@@ -13,4 +13,5 @@ rm /var/lib/apt/lists/*
 
 apt-get update
 apt-get upgrade
-apt-get install git gcc g++ make texinfo gawk diffstat chrpath
+apt-get install git gcc g++ make texinfo gawk diffstat chrpath \
+	subversion iasl
