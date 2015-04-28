@@ -14,4 +14,10 @@ rm /var/lib/apt/lists/*
 apt-get update
 apt-get upgrade
 apt-get install git gcc g++ make texinfo gawk diffstat chrpath \
-	subversion iasl
+
+# Required to build ACPICA tools supporting ACPI 5.0
+# This replaces the obsolute version in the ubuntu iasl package.
+apt-get install m4 bison flex
+
+# Required to build EDKII firmware
+apt-get install subversion libcurl4-openssl-dev

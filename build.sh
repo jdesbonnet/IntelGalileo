@@ -15,26 +15,83 @@ cd meta-clanton_v1.0.5
 source poky/oe-init-build-env yocto_build
 bitbake image-spi-galileo
 
+# Check this
+cd ..
+# TODO: not sure what dir I'm in here.
+pwd
+
 #
 #  Build EDKII (Part 4 of the User Guide)
 #
+
+# First build ACPICA tools (normally in iasl package, but ubuntu 12.04 version
+# does not support ACPI5.0 which is required here. So build from source.
+
+# There seems to be a problem with the certificate
+wget --no-check-certificate https://acpica.org/sites/acpica/files/acpica-unix-20150410.tar.gz
+cd  acpica-unix-20150410
+make
+sudo make install
+
+cd ..
+
 tar -xf Quark_EDKII_v1.0.2.tar.gz
 cd Quark_EDKII_v1.0.2
+# 5.3. Prepare the build environment (Part 4.2.1 of the User Guide)
 ./patches_v1.0.5/patch.Quark_EDKII.sh 
 ./svn_setup.py
 svn update
 
 export GCCVERSION=$(gcc -dumpversion | cut -c 3)
 
+# 5.4. Build EDKII (Part 4.4 of the User Guide)
+#
 # This is currently failing due to the following:
 # GenFvInternalLib.c:26:23: fatal error: uuid/uuid.h: No such file or directory
 # Solution: install missing package uuid-dev
+#
 # Next failing due to the following:
 # /bin/sh: 1: /usr/bin/iasl: not found
-# Solution: install issing package iasl
+# Solution: install issing package iasl. Update: wrong solution. Need to build
+# version that supports ACPI 5.0 from source.
+#
 # Next failing due to the following:
 #  Object does not exist ^  (\_SB.PCI0.SDIO)
-
-
+# Discussed here: http://stackoverflow.com/questions/28837504/intel-galileo-bsp-quark-edkii-error-4063
+# Solution: Turns out the iasl package in ubuntu archive supports ACPI 4.0.
+# Need ACPI 5.0. So need to build this from sources.
 ./quarkbuild.sh -r32 GCC4${GCCVERSION} QuarkPlatform
+
+# 5.5. Create a symlink for SPI Flash Tools
+export GCCVERSION=$(gcc -dumpversion | cut -c 3)
+ln -s RELEASE_GCC4${GCCVERSION} Build/QuarkPlatform/RELEASE_GCC
+
+
+cd ..
+
+#6. Create a flash Image (SPI) (Part 8 of the User Guide)
+
+#6.1. Unarchive sysimage package
+tar -xf sysimage_v1.0.1.tar.gz
+
+#6.2. Patch the sysimage package
+./patches_v1.0.5/patch.sysimage.sh 
+
+
+#6.3. Build SPI
+tar -xf spi-flash-tools_v1.0.1.tar.gz
+./sysimage_v1.0.1/create_symlinks.sh
+cd sysimage/sysimage.CP-8M-release
+
+
+
+# Failing due to:
+# ../../spi-flash-tools/asset-signing-tool/sign.c:48:24: fatal error: openssl/bn.h: No such file or directory
+# Solution: install package libcurl4-openssl-dev (it's possible only a subset of what's install is needed tho')
+#
+# Failing due to: 
+#  ../../spi-flash-tools/BaseTools/x86_64/C/bin/GenFw: Syntax error: "(" unexpected
+# Discussed here: https://communities.intel.com/thread/48689
+../../spi-flash-tools/Makefile
+
 
