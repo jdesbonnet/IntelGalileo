@@ -1,3 +1,24 @@
+#!/bin/bash
+#
+# Script to build Intel Galileo software distribution on 
+# Ubuntu 12.04 32 bit server edition. There are some 
+# dependencies that must be installed first. See file
+# install-missing-packages.sh.
+#
+# Status: this script is almost working but failing at the last step (building
+# firmware upload file). Date: 27 April 2015. 
+#
+# Build instructions seem to be very epheremal and likely not to fully work
+# any significat time after the above date.
+# 
+# Adapted from instructions in file:
+# BSP-Patches-and-Build_Instructions.1.0.4.txt at 
+# http://downloadmirror.intel.com/24355/eng/BSP-Patches-and-Build_Instructions.1.0.4.txt
+# Also see: 
+# http://downloadmirror.intel.com/23962/eng/Quark_BSP_BuildandSWUserGuide_329687_007.pdf
+
+
+
 if [ ! -e 1.0.4.tar.gz ]; then
 wget https://github.com/01org/Galileo-Runtime/archive/1.0.4.tar.gz
 fi
