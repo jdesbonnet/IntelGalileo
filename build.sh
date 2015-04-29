@@ -112,7 +112,16 @@ cd sysimage/sysimage.CP-8M-release
 #
 # Failing due to: 
 #  ../../spi-flash-tools/BaseTools/x86_64/C/bin/GenFw: Syntax error: "(" unexpected
-# Discussed here: https://communities.intel.com/thread/48689
-../../spi-flash-tools/Makefile
+# Discussed here: 
+# https://communities.intel.com/thread/48689
+# and here:
+# https://communities.intel.com/message/240758 (see msg Kalpesh Jun 30, 2014 11:41 PM)
+# Solution: need to make the BaseTools from source
+# git clone git://git.code.sf.net/p/tianocore/edk2-BaseTools tianocore-edk2-BaseTools
+# cd tianocore-edk2-BaseTools
+# make all
+#../../spi-flash-tools/Makefile
+ ../../spi-flash-tools/Makefile BASETOOLS=../../../tianocore-edk2-BaseTools/Source/C/bin
+
 
 
