@@ -35,6 +35,7 @@ tar -xf meta-clanton_v1.0.5.tar.gz
 cd meta-clanton_v1.0.5
 source poky/oe-init-build-env yocto_build
 bitbake image-spi-galileo
+#bitbake image-full
 
 # Check this
 cd ..
